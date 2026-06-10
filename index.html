@@ -200,7 +200,7 @@
             <canvas id="gameCanvas" width="600" height="360"></canvas>
             <div class="bottom-ticker">
                 <span>Heaven: Tim Dooley The Potato of Life, Axis of North</span>
-                <span style="color: #ffcc00;">☕ support me at buymeacoffee.com/potatolife</span>
+                <span style="color: #ff3333; font-weight: bold;">🔴 0 VIEWERS MATCHED</span>
             </div>
         </div>
 
@@ -522,7 +522,7 @@
             rageTimer = 5;
             supply = Math.max(supply - 15, 0);
             addChat('main-chat', null, '⚠️ NARCO RAGE ACTIVE: You scanned the restream logging threats regarding your sister and past history!', 'troll');
-            addChat('restream-chat', 'Active_Roaster', 'POTATO RAGE MULTIPLIER ENGAGED! WATCH THE EYES FLASH RED!', 'troll');
+            addChat('restream-chat', 'Live_Viewer', 'POTATO RAGE MULTIPLIER ENGAGED! WATCH THE EYES FLASH RED!', 'troll');
         }
         
         drawScreen();
@@ -532,7 +532,7 @@
     window.onload = function() {
         drawScreen();
         updateUI();
-        gameInterval = setInterval(gameTick, 3500); // 3.5-second readable tick pacing
+        gameInterval = setInterval(gameTick, 3500); 
     };
 </script>
 
