@@ -31,16 +31,14 @@
             padding-bottom: 5px;
         }
         header h1 { color: #ff3333; margin: 0; font-size: 28px; }
-        header p { color: #ffff33; margin: 3px 0; font-weight: bold; font-size: 12px; }
+        header p { color: #ffff33; margin: 3px 0; font-weight: bold; font-size: 12px; text-transform: uppercase; }
         
-        /* The main layout layout */
         .main-stage {
             display: grid;
             grid-template-columns: 550px 1fr;
             gap: 15px;
         }
 
-        /* Visual Stream Feed Component */
         .video-feed {
             width: 550px;
             height: 340px;
@@ -75,14 +73,12 @@
             font-weight: bold;
         }
 
-        /* Canvas Character Area */
         #gameCanvas {
             background: #2a2a30;
             width: 100%;
             height: 100%;
         }
 
-        /* Right Dashboard Panel */
         .side-dashboard {
             display: flex;
             flex-direction: column;
@@ -110,9 +106,8 @@
             border-radius: 2px;
             overflow: hidden;
         }
-        .bar-fill { height: 100%; width: 100%; transition: width 0.2s; }
+        .bar-fill { height: 100%; width: 100%; transition: width 0.4s; }
         
-        /* Action Grid */
         .action-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -134,7 +129,6 @@
         .btn-panic { background: #5c2b2b; border-color: #993333; }
         .btn-panic:hover { background: #7a3838; }
 
-        /* Dual Chat Setup */
         .chat-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -174,7 +168,7 @@
 <div class="game-container" id="game-window">
     <header>
         <h1>FAILURE SIMULATOR 2027</h1>
-        <p>🏆 GAME OF THE YEAR ADDITION - GRAPHICAL INTERACTIVE BUILD 🏆</p>
+        <p>🏆 GAME OF THE YEAR ADDITION - PACED STABLE BUILD 🏆</p>
     </header>
 
     <div class="main-stage">
@@ -233,7 +227,6 @@
 </div>
 
 <script>
-    // System Values
     let supply = 100;
     let health = 100;
     let hygiene = 80;
@@ -248,7 +241,6 @@
     let rageTimer = 0;
     let gameInterval;
     
-    // Canvas Graphical Elements
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
 
@@ -266,72 +258,57 @@
     function drawScreen() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw White Room Background Wall
         ctx.fillStyle = "#e2e2e8";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Draw Salmon Couch Unit
-        ctx.fillStyle = "#fa8072"; // Salmon palette base
+        ctx.fillStyle = "#fa8072"; 
         ctx.fillRect(40, 160, 470, 150);
-        ctx.fillStyle = "#e06c5f"; // Couch shading depth
+        ctx.fillStyle = "#e06c5f"; 
         ctx.fillRect(40, 160, 470, 30); 
         ctx.fillRect(40, 250, 470, 60); 
 
-        // Draw Blue Blanket over left armrest
         ctx.fillStyle = "#3366cc";
         ctx.fillRect(50, 180, 80, 110);
-        ctx.fillStyle = "#224499"; // Blanket folds
+        ctx.fillStyle = "#224499"; 
         ctx.fillRect(70, 180, 10, 110);
         ctx.fillRect(100, 180, 10, 110);
 
-        // Character Positioning Metrics
         let centerX = canvas.width / 2;
         let centerY = 190;
 
-        // If in Narco Rage, trigger background frame disruption flashing
         if (isRaging && Math.floor(Date.now() / 200) % 2 === 0) {
             ctx.fillStyle = "rgba(255, 0, 0, 0.25)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
-        // Draw Skinny Arm & Body Frames
-        ctx.fillStyle = "#e8c3a7"; // Pale skin tone
+        ctx.fillStyle = "#e8c3a7"; 
 
-        // Draw Head Profile Base
-        ctx.fillStyle = "#e8c3a7";
         ctx.beginPath();
         ctx.arc(centerX, centerY - 50, 24, 0, Math.PI * 2);
         ctx.fill();
 
-        // Balding Configuration Lines (Sparse top hair strands)
         ctx.strokeStyle = "#8c6f4b"; 
         ctx.lineWidth = 2;
         ctx.beginPath();
-        // Left side strands
         ctx.moveTo(centerX - 15, centerY - 68); ctx.lineTo(centerX - 35, centerY - 75);
         ctx.moveTo(centerX - 10, centerY - 72); ctx.lineTo(centerX - 28, centerY - 88);
-        // Right side strands
         ctx.moveTo(centerX + 15, centerY - 68); ctx.lineTo(centerX + 35, centerY - 75);
         ctx.moveTo(centerX + 10, centerY - 72); ctx.lineTo(centerX + 28, centerY - 88);
         ctx.stroke();
 
-        // Long Dirty Blonde Hair flow falling past shoulders
         ctx.fillStyle = "#bfa36f"; 
         ctx.fillRect(centerX - 27, centerY - 50, 9, 75);
         ctx.fillRect(centerX + 18, centerY - 50, 9, 75);
 
-        // Eyes Construction (Red veins/exhaustion)
         ctx.fillStyle = "#ffcccc";
         ctx.fillRect(centerX - 12, centerY - 56, 7, 5);
         ctx.fillRect(centerX + 5, centerY - 56, 7, 5);
-        ctx.fillStyle = isRaging ? "#ff0000" : "#444455"; // Rage eyes
+        ctx.fillStyle = isRaging ? "#ff0000" : "#444455"; 
         ctx.fillRect(centerX - 10, centerY - 55, 3, 3);
         ctx.fillRect(centerX + 7, centerY - 55, 3, 3);
 
-        // Rotting Teeth Display Area
-        ctx.fillStyle = "#332211"; // Inner dark gap
+        ctx.fillStyle = "#332211"; 
         ctx.fillRect(centerX - 8, centerY - 40, 16, 7);
-        // Yellow/brown irregular structural pixels
         ctx.fillStyle = "#ccaa44";
         ctx.fillRect(centerX - 6, centerY - 40, 3, 3);
         ctx.fillRect(centerX - 1, centerY - 40, 2, 2);
@@ -339,7 +316,6 @@
         ctx.fillRect(centerX - 4, centerY - 36, 2, 3);
         ctx.fillRect(centerX + 2, centerY - 36, 3, 3);
 
-        // Longer Scraggly Dirty Blonde Beard Layer overlay
         ctx.fillStyle = "#bfa36f";
         ctx.beginPath();
         ctx.moveTo(centerX - 24, centerY - 45);
@@ -349,33 +325,26 @@
         ctx.closePath();
         ctx.fill();
 
-        // Torso Allocation - Alternating Shirt logic applied
         ctx.fillStyle = shirtColors[currentShirtIndex];
         ctx.fillRect(centerX - 40, centerY - 20, 80, 85);
-        // Sleeve cuts
         ctx.fillRect(centerX - 55, centerY - 20, 20, 30);
         ctx.fillRect(centerX + 35, centerY - 20, 20, 30);
 
-        // Skinny Stick-figure arms
         ctx.fillStyle = "#e8c3a7";
         ctx.fillRect(centerX - 52, centerY + 10, 10, 60);
         ctx.fillRect(centerX + 42, centerY + 10, 10, 60);
 
-        // Girl Blue Jeans layer
         ctx.fillStyle = "#4a75a0";
         ctx.fillRect(centerX - 42, centerY + 65, 84, 60);
 
-        // Bedazzled White Belt implementation
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(centerX - 42, centerY + 62, 84, 8);
-        // Sparkle gems decoration array
         ctx.fillStyle = "#66ccff";
         for (let i = centerX - 36; i < centerX + 40; i += 12) {
             ctx.fillRect(i, centerY + 64, 3, 3);
         }
 
-        // Active Deep Fried Fry Unit interaction holding state
-        ctx.fillStyle = "#eec550"; // Golden tone
+        ctx.fillStyle = "#eec550"; 
         ctx.fillRect(centerX - 10, centerY + 45, 18, 4);
     }
 
@@ -392,13 +361,13 @@
         document.getElementById('viewers-txt').innerText = viewers;
         document.getElementById('restream-viewers-txt').innerText = restreamViewers;
         document.getElementById('shirt-days').innerText = shirtDays;
-        
-        let sSpan = document.getElementById('shirt-color');
         document.getElementById('shirt-txt').innerText = shirts[currentShirtIndex] + " Shirt";
 
         let hrs = Math.floor(minutes / 60).toString().padStart(2, '0');
         let mins = (minutes % 60).toString().padStart(2, '0');
         document.getElementById('clock-txt').innerText = `${hrs}:${mins}`;
+
+        document.getElementById('rage-banner').style.display = isRaging ? 'block' : 'none';
     }
 
     function addChat(panelId, user, text, type) {
@@ -412,7 +381,7 @@
     }
 
     function gameTick() {
-        minutes += 6;
+        minutes += 6; // 6 game minutes advance each slow cycle
         
         if (minutes % 180 === 0) {
             if (shirtDays < 28) shirtDays++;
@@ -440,7 +409,6 @@
             }
         }
 
-        // Restream automated mockery triggers
         if (Math.random() < 0.4) {
             let user = "Hater_" + Math.floor(Math.random() * 99);
             if (Math.random() < 0.5) {
@@ -511,7 +479,8 @@
     window.onload = function() {
         drawScreen();
         updateUI();
-        gameInterval = setInterval(gameTick, 950);
+        // Slowed down calculation loop to every 3500ms (3.5 seconds)
+        gameInterval = setInterval(gameTick, 3500);
     };
 </script>
 
