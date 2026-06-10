@@ -206,7 +206,7 @@
     let hygiene = 80;
     let shirtDays = 19;
     let shirts = ["Black Shirt", "Red Shirt", "Pink Shirt"];
-    let currentShirtIndex = 2; // Starts on Pink
+    let currentShirtIndex = 2; 
     let minutes = 0;
     let viewers = 0;
     let restreamViewers = 14;
@@ -214,4 +214,229 @@
     let rageTimer = 0;
     let gameInterval;
 
-    const mainChatTrolls =
+    const mainChatTrolls = [
+        "Why is it always 0 viewers in here lmao",
+        "Play another terrible AI song, Tom."
+    ];
+
+    const buddies = [
+        "Ignore the restream Thomas, you're a content genius!",
+        "The grind is real bro! Total potato of life!"
+    ];
+
+    const restreamGeneral = [
+        "LMAO he's been live for 6 hours to 0 people",
+        "Did he really think people forgot about the criminal convictions?",
+        "Wait until he realizes we are laughing at his sister's posts",
+        "Imagine spending 18 hours generating AI content for absolutely no one"
+    ];
+
+    const dietRoasts = [
+        "Look at him shoving deep fried french fries down his throat like a literal neanderthal",
+        "The way he eats is terrifying, completely zero manners",
+        "Grease marks all over his face while he loops AI music 💀",
+        "Literal caveman eating habits on full display tonight"
+    ];
+
+    const couchRoasts = [
+        "The mold on that salmon couch is developing its own ecosystem",
+        "Is he ever going to get up from that disgusting moldy couch?",
+        "Look at that bedazzled white belt struggling while he leans back",
+        "He's unironically wearing girl blue jeans right now I can't breathe"
+    ];
+
+    const showerRoasts = [
+        "HE'S BACK! SAME CLOTHES! Day status confirmed unwashed!",
+        "Bro ran under the tap for 2 mins with zero soap, I can smell it from here",
+        "Look at his wet hair, still sitting in that same sticky outfit 💀"
+    ];
+
+    function updateUI() {
+        document.getElementById('supply-fill').style.width = Math.max(0, supply) + '%';
+        document.getElementById('supply-txt').innerText = Math.floor(supply) + '%';
+        
+        document.getElementById('health-fill').style.width = Math.max(0, health) + '%';
+        document.getElementById('health-txt').innerText = Math.floor(health) + '%';
+
+        document.getElementById('hygiene-fill').style.width = Math.max(0, hygiene) + '%';
+        document.getElementById('hygiene-txt').innerText = Math.floor(hygiene) + '%';
+
+        document.getElementById('viewers-txt').innerText = viewers;
+        document.getElementById('restream-viewers-txt').innerText = restreamViewers;
+        document.getElementById('shirt-days').innerText = shirtDays;
+        document.getElementById('shirt-color').innerText = shirts[currentShirtIndex];
+
+        let hrs = Math.floor(minutes / 60).toString().padStart(2, '0');
+        let mins = (minutes % 60).toString().padStart(2, '0');
+        document.getElementById('clock-txt').innerText = `${hrs}:${mins}`;
+
+        document.getElementById('rage-banner').style.display = isRaging ? 'block' : 'none';
+    }
+
+    function addMainLog(user, text, type) {
+        const box = document.getElementById('chat-box');
+        if(!box) return;
+        const msg = document.createElement('div');
+        msg.className = 'chat-msg';
+        if(type === 'troll') msg.innerHTML = `<span class="msg-troll">${user}:</span> ${text}`;
+        else if(type === 'buddy') msg.innerHTML = `<span class="msg-buddy">${user}:</span> ${text}`;
+        else msg.innerHTML = `<span class="msg-system">${text}</span>`;
+        box.appendChild(msg);
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function addRestreamLog(user, text) {
+        const box = document.getElementById('restream-box');
+        if(!box) return;
+        const msg = document.createElement('div');
+        msg.className = 'chat-msg msg-restream';
+        msg.innerHTML = `<strong>${user}:</strong> ${text}`;
+        box.appendChild(msg);
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function gameTick() {
+        minutes += 6; 
+        
+        if (minutes % 180 === 0) {
+            if (shirtDays < 28) shirtDays++;
+            if (Math.random() < 0.3) {
+                currentShirtIndex = Math.floor(Math.random() * shirts.length);
+                addRestreamLog("Outfit_Bot", `Webcam analysis: Switched to the ${shirts[currentShirtIndex]}. Streak count carried over.`);
+            }
+        }
+
+        restreamViewers = Math.floor(Math.random() * (24 - 11 + 1)) + 11;
+        viewers = Math.random() < 0.10 ? 1 : 0;
+
+        let supplyDrain = isRaging ? 2.2 : 0.7; 
+        supply -= supplyDrain;
+        hygiene -= 0.5;
+
+        if (hygiene <= 0) {
+            hygiene = 0;
+            health -= 0.5;
+        }
+
+        if (isRaging) {
+            health -= 0.8;
+            rageTimer--;
+            if (rageTimer <= 0) {
+                isRaging = false;
+                addMainLog("System", "Narco Rage fades out. You stare blankly at your blue-lit monitor.", "system");
+            }
+        }
+
+        if (Math.random() < 0.35) {
+            let roll = Math.random();
+            let msg = "";
+            let user = "Restreamer_" + Math.floor(Math.random() * 99);
+            
+            if (roll < 0.33) {
+                msg = dietRoasts[Math.floor(Math.random() * dietRoasts.length)];
+                supply -= 2.5; 
+                addRestreamLog(user, msg);
+                if(Math.random() < 0.1) addMainLog("System", "❌ The restream's remarks on your prehistoric eating habits drain your Narco Supply.", "system");
+            } else if (roll < 0.66) {
+                msg = couchRoasts[Math.floor(Math.random() * couchRoasts.length)];
+                supply -= 2.0; 
+                addRestreamLog(user, msg);
+            } else {
+                msg = restreamGeneral[Math.floor(Math.random() * restreamGeneral.length)];
+                addRestreamLog(user, msg);
+            }
+        }
+
+        if (viewers > 0 && Math.random() < 0.2) {
+            if (Math.random() < 0.3) {
+                let msg = buddies[Math.floor(Math.random() * buddies.length)];
+                addMainLog("BuddyTroll_Enabler", msg, "buddy");
+                supply = Math.min(supply + 30, 100); 
+                addMainLog("System", "⚡ Narco Supply Restocked by a loyal enabler!", "system");
+            } else {
+                let msg = mainChatTrolls[Math.floor(Math.random() * mainChatTrolls.length)];
+                addMainLog("RandomLurker", msg, "troll");
+            }
+        }
+
+        if (health <= 0 || supply <= 0) {
+            endGame(false, "Your Narco Supply hit zero. You slumped backwards into the moldy salmon couch cushions, clutching a greasy fry. The Restream clipped it instantly. Game Over.");
+        } else if (minutes >= 1080) {
+            endGame(true, `You did it. 18 hours of absolute madness. You survived the couch, the girl jeans, and the haters. The Potato of Life reigns supreme.`);
+        }
+
+        updateUI();
+    }
+
+    function playAIContent(type) {
+        if(supply < 5) return;
+        supply -= 3;
+        addMainLog("System", `Playing an AI ${type} to an empty room.`, "system");
+        addRestreamLog("Restream_Bot", `Alert: More loop content detected. Engaging mockery protocols.`);
+        updateUI();
+    }
+
+    function potatoConspiracy() {
+        if (supply < 20) return;
+        supply -= 18; 
+        
+        addMainLog("System", "🗣️ You lean forward in your girl jeans: 'I AM THE POTATO OF LIFE! You sub-humans on the restream are stealing my data!'", "system");
+        health = Math.min(health + 5, 100); 
+        
+        addRestreamLog("Clipped_Moments", "OH MY GOD HE'S DOING THE POTATO RANT AGAIN HAHAHAHA");
+        addRestreamLog("Restreamer_Conspiracy", "He genuinely thinks we are part of a deep state network tracking his fries");
+        updateUI();
+    }
+
+    function takeNoSoapShower() {
+        if (supply < 15) return;
+        supply -= 12; 
+        hygiene = 100; 
+        
+        addMainLog("System", "🚿 Quick water-only rinse completed. The bedazzled belt is clipped back onto unwashed denim.", "system");
+        health -= 12; 
+        supply = Math.max(supply - 8, 0); 
+        
+        for (let i = 0; i < 2; i++) {
+            let roast = showerRoasts[Math.floor(Math.random() * showerRoasts.length)];
+            addRestreamLog("Outfit_Monitor", `[STREAK CONTINUES] ${roast}`);
+        }
+        updateUI();
+    }
+
+    function checkRestream() {
+        if (isRaging) return;
+        addMainLog("System", "Checking the restream chat window...", "system");
+        
+        isRaging = true;
+        rageTimer = 6; 
+        supply = Math.max(supply - 15, 0); 
+        
+        addMainLog("System", "🤬 NARCO RAGE! They are roasting your moldy couch, your teeth, and your clothing streak!", "system");
+        addRestreamLog("Restreamer_Epic", "HE'S LOOKING! WATCH THE POTATO RAGE OUT!");
+        updateUI();
+    }
+
+    function endGame(won, message) {
+        clearInterval(gameInterval);
+        const win = document.getElementById('game-window');
+        if(win) {
+            win.innerHTML = `
+                <div style="text-align:center; padding: 40px;">
+                    <h2 style="color:#ff3333;">${won ? '🏁 MARATHON CONCLUDED' : '💀 SYSTEM CRASH'}</h2>
+                    <p>${message}</p>
+                    <button onclick="window.location.reload()">Boot up the stream again</button>
+                </div>
+            `;
+        }
+    }
+
+    // Safer window load initialization
+    window.onload = function() {
+        updateUI();
+        gameInterval = setInterval(gameTick, 900);
+    };
+</script>
+
+</body>
+</html>
