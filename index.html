@@ -20,12 +20,12 @@
         }
         
         .game-container {
-            width: 98vw; /* Fluid percentage width of viewport bounds */
-            height: 95vh; /* Fluid percentage height of viewport bounds */
+            width: 98vw; 
+            height: 95vh; 
             background: #18181c;
             border: 2px solid #2d2d35;
             border-radius: 12px;
-            padding: 15px;
+            padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             display: flex;
             flex-direction: column;
@@ -36,20 +36,20 @@
         header {
             text-align: center;
             background: #111114;
-            padding: 8px;
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid #2d2d35;
             flex-shrink: 0;
         }
-        header h1 { color: #ff3333; margin: 0; font-size: 22px; letter-spacing: 2px; }
-        header p { color: #ffff33; margin: 4px 0 0 0; font-weight: bold; font-size: 11px; letter-spacing: 1px; }
+        header h1 { color: #ff3333; margin: 0; font-size: 28px; letter-spacing: 2px; }
+        header p { color: #ffff33; margin: 6px 0 0 0; font-weight: bold; font-size: 14px; letter-spacing: 1px; }
         
         .main-stage {
             display: grid;
-            grid-template-columns: 1.618fr 1fr; /* Golden ratio fluid split scaling */
-            gap: 15px;
+            grid-template-columns: 1.618fr 1fr; 
+            gap: 20px;
             flex-grow: 1;
-            min-height: 0; /* Clear overflow limits */
+            min-height: 0; 
         }
 
         /* Fluid Stream Window UI container */
@@ -94,9 +94,9 @@
             left: 15px;
             background: #ff0000;
             color: white;
-            padding: 4px 10px;
+            padding: 6px 14px;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 15px;
             border-radius: 4px;
             z-index: 10;
             box-shadow: 0 2px 6px rgba(0,0,0,0.4);
@@ -111,7 +111,7 @@
             color: #b3a2c7;
             font-family: 'Georgia', serif;
             font-style: italic;
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
             z-index: 10;
@@ -122,9 +122,9 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(17, 17, 20, 0.85);
-            padding: 8px 15px;
-            font-size: 11px;
+            background: rgba(17, 17, 20, 0.9);
+            padding: 12px 20px;
+            font-size: 14px;
             box-sizing: border-box;
             border-top: 1px solid #2d2d35;
             color: #fff;
@@ -137,31 +137,31 @@
         .side-dashboard {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
             min-height: 0;
-            overflow-y: auto; /* Fallback for safe UI clipping */
+            overflow-y: auto; 
         }
         .panel {
             background: #111114;
             border: 1px solid #2d2d35;
-            padding: 12px;
+            padding: 15px;
             border-radius: 8px;
         }
-        .panel h3 { margin: 0 0 10px 0; font-size: 12px; color: #888; text-transform: uppercase; }
+        .panel h3 { margin: 0 0 12px 0; font-size: 15px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
 
-        .stat-bar-container { margin-bottom: 8px; }
-        .stat-header { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; font-weight: bold; }
-        .bar-bg { background: #1a1a22; height: 14px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
+        .stat-bar-container { margin-bottom: 12px; }
+        .stat-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; font-weight: bold; }
+        .bar-bg { background: #1a1a22; height: 18px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
         .bar-fill { height: 100%; width: 100%; transition: width 0.6s ease; }
         
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         button {
             background: #22222a;
             color: #fff;
             border: 1px solid #3d3d4a;
-            padding: 10px;
+            padding: 14px;
             font-family: inherit;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: bold;
             cursor: pointer;
             border-radius: 6px;
@@ -176,7 +176,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
-            height: 160px; /* Balanced height for full screen layout */
+            height: 200px; 
             flex-shrink: 0;
         }
         .chat-container {
@@ -189,20 +189,20 @@
         }
         .chat-header {
             background: #111114;
-            padding: 6px 12px;
-            font-size: 11px;
+            padding: 8px 12px;
+            font-size: 13px;
             font-weight: bold;
             border-bottom: 1px solid #2d2d35;
-            color: #888;
+            color: #aaa;
         }
         .chat-window {
             flex-grow: 1;
-            padding: 10px;
+            padding: 12px;
             overflow-y: auto;
-            font-size: 11px;
-            line-height: 1.5;
+            font-size: 13px;
+            line-height: 1.6;
         }
-        .msg { margin-bottom: 6px; }
+        .msg { margin-bottom: 8px; }
         .system { color: #ffff33; font-style: italic; }
         .buddy { color: #33ff33; font-weight: bold; }
         .troll { color: #ff5555; }
@@ -248,13 +248,13 @@
                 </div>
             </div>
 
-            <div class="panel" style="font-size:11px; line-height: 1.6; display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+            <div class="panel" style="font-size:13px; line-height: 1.6; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 <div><strong>Clock Cycle:</strong> <span id="clock-txt">00:00</span>/18:00</div>
                 <div><strong>Live Audience:</strong> <span id="viewers-txt">0</span></div>
                 <div><strong>Outfit Streaks:</strong> <span id="shirt-days">19</span> Days</div>
                 <div><strong>Restream Base:</strong> <span id="restream-viewers-txt">14</span></div>
-                <div style="grid-column: span 2; border-top: 1px dashed #333; padding-top: 5px; margin-top: 5px;">
-                    <strong>Active Current State:</strong> <span id="emotion-txt" style="color:#ffff33; font-weight:bold;">Neutral</span>
+                <div style="grid-column: span 2; border-top: 1px dashed #333; padding-top: 8px; margin-top: 5px;">
+                    <strong>Active Current State:</strong> <span id="emotion-txt" style="color:#ffff33; font-weight:bold;">NEUTRAL</span>
                 </div>
             </div>
 
@@ -422,17 +422,17 @@
             clearInterval(gameInterval);
             document.getElementById('game-window').innerHTML = `
                 <div style="text-align:center; padding: 60px; font-family:monospace; background:#111114; border-radius:12px; border:1px solid #333; width:100%; box-sizing:border-box;">
-                    <h2 style="color:#ff3333; font-size:28px; letter-spacing:1px;">💀 SYSTEM CRASH: STREAM OFFLINE</h2>
-                    <p style="color:#aaa; margin: 15px 0;">Your Narco Supply completely depleted. You fell sideways into the salmon couch frame. The restream community has uploaded a 4K frame-clip of the event.</p>
-                    <button onclick="window.location.reload()">Instantiate Next Boot Cycle</button>
+                    <h2 style="color:#ff3333; font-size:32px; letter-spacing:1px;">💀 SYSTEM CRASH: STREAM OFFLINE</h2>
+                    <p style="color:#aaa; margin: 15px 0; font-size: 16px;">Your Narco Supply completely depleted. You fell sideways into the salmon couch frame. The restream community has uploaded a 4K frame-clip of the event.</p>
+                    <button style="font-size: 16px; padding: 15px 30px;" onclick="window.location.reload()">Instantiate Next Boot Cycle</button>
                 </div>`;
         } else if (minutes >= 1080) {
             clearInterval(gameInterval);
             document.getElementById('game-window').innerHTML = `
                 <div style="text-align:center; padding: 60px; font-family:monospace; background:#111114; border-radius:12px; border:1px solid #333; width:100%; box-sizing:border-box;">
-                    <h2 style="color:#ffff33; font-size:28px; letter-spacing:1px;">🏁 18-HOUR BLOCK SECURED</h2>
-                    <p style="color:#aaa; margin: 15px 0;">Marathon complete. You occupied a salmon sofa for 18 continuous hours to an audience size of absolute zero. The Potato of Life matrix stands unchallenged.</p>
-                    <button onclick="window.location.reload()">Boot Next Cycle</button>
+                    <h2 style="color:#ffff33; font-size:32px; letter-spacing:1px;">🏁 18-HOUR BLOCK SECURED</h2>
+                    <p style="color:#aaa; margin: 15px 0; font-size: 16px;">Marathon complete. You occupied a salmon sofa for 18 continuous hours to an audience size of absolute zero. The Potato of Life matrix stands unchallenged.</p>
+                    <button style="font-size: 16px; padding: 15px 30px;" onclick="window.location.reload()">Boot Next Cycle</button>
                 </div>`;
         }
 
