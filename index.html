@@ -10,48 +10,56 @@
             color: #d1d1d6;
             font-family: 'Courier New', Courier, monospace;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
             user-select: none;
         }
         
         .game-container {
-            width: 1050px;
+            width: 98vw; /* Fluid percentage width of viewport bounds */
+            height: 95vh; /* Fluid percentage height of viewport bounds */
             background: #18181c;
             border: 2px solid #2d2d35;
             border-radius: 12px;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
+            box-sizing: border-box;
         }
 
         header {
             text-align: center;
             background: #111114;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
             border: 1px solid #2d2d35;
+            flex-shrink: 0;
         }
-        header h1 { color: #ff3333; margin: 0; font-size: 24px; letter-spacing: 2px; }
-        header p { color: #ffff33; margin: 5px 0 0 0; font-weight: bold; font-size: 11px; letter-spacing: 1px; }
+        header h1 { color: #ff3333; margin: 0; font-size: 22px; letter-spacing: 2px; }
+        header p { color: #ffff33; margin: 4px 0 0 0; font-weight: bold; font-size: 11px; letter-spacing: 1px; }
         
         .main-stage {
             display: grid;
-            grid-template-columns: 600px 1fr;
-            gap: 20px;
+            grid-template-columns: 1.618fr 1fr; /* Golden ratio fluid split scaling */
+            gap: 15px;
+            flex-grow: 1;
+            min-height: 0; /* Clear overflow limits */
         }
 
-        /* Upgraded Stream Window UI container */
+        /* Fluid Stream Window UI container */
         .video-feed-wrapper {
             position: relative;
             background: #000; 
             border: 4px solid #111114;
             border-radius: 8px;
-            width: 600px;
-            height: 360px;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
             box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
         }
@@ -67,7 +75,7 @@
             object-fit: cover;
         }
 
-        /* Dynamic Expressive Character Layer */
+        /* Dynamic Character Layer */
         #character-sprite {
             position: absolute;
             top: 0;
@@ -129,17 +137,19 @@
         .side-dashboard {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
+            min-height: 0;
+            overflow-y: auto; /* Fallback for safe UI clipping */
         }
         .panel {
             background: #111114;
             border: 1px solid #2d2d35;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
         }
-        .panel h3 { margin: 0 0 12px 0; font-size: 13px; color: #888; text-transform: uppercase; }
+        .panel h3 { margin: 0 0 10px 0; font-size: 12px; color: #888; text-transform: uppercase; }
 
-        .stat-bar-container { margin-bottom: 10px; }
+        .stat-bar-container { margin-bottom: 8px; }
         .stat-header { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; font-weight: bold; }
         .bar-bg { background: #1a1a22; height: 14px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
         .bar-fill { height: 100%; width: 100%; transition: width 0.6s ease; }
@@ -149,7 +159,7 @@
             background: #22222a;
             color: #fff;
             border: 1px solid #3d3d4a;
-            padding: 12px;
+            padding: 10px;
             font-family: inherit;
             font-size: 11px;
             font-weight: bold;
@@ -165,8 +175,9 @@
         .chat-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            height: 220px;
+            gap: 15px;
+            height: 160px; /* Balanced height for full screen layout */
+            flex-shrink: 0;
         }
         .chat-container {
             display: flex;
@@ -178,7 +189,7 @@
         }
         .chat-header {
             background: #111114;
-            padding: 8px 12px;
+            padding: 6px 12px;
             font-size: 11px;
             font-weight: bold;
             border-bottom: 1px solid #2d2d35;
@@ -186,7 +197,7 @@
         }
         .chat-window {
             flex-grow: 1;
-            padding: 12px;
+            padding: 10px;
             overflow-y: auto;
             font-size: 11px;
             line-height: 1.5;
@@ -283,25 +294,23 @@
     let restreamViewers = 14;
     let isRaging = false;
     let rageTimer = 0;
-    let cleanTimer = 0; // Tracks duration of the clean sprite state
+    let cleanTimer = 0;
     let gameInterval;
     
-    // Direct mapping to your expanded high-quality asset suite
     const spritePaths = {
         neutral: 'assets/images/neutral.png',
         sad: 'assets/images/sad.png',
         cry: 'assets/images/cry.png',
         smug: 'assets/images/smug.png',
         rage: 'assets/images/rage.png',
-        clean: 'assets/images/clean.png' // New clean rinse state mapped successfully
+        clean: 'assets/images/clean.png'
     };
 
     const spriteElement = document.getElementById('character-sprite');
 
-    // Engine function to cleanly flip the character's facial emotion
     function updateSpriteEmotion(emotion) {
         if (spritePaths[emotion]) {
-            spriteElement.style.opacity = 0.5; // Quick layout fade transition
+            spriteElement.style.opacity = 0.5;
             spriteElement.src = spritePaths[emotion];
             spriteElement.alt = `Thomas - ${emotion}`;
             document.getElementById('emotion-txt').innerText = emotion.toUpperCase();
@@ -380,7 +389,6 @@
             }
         }
 
-        // Handle the visual persistence duration for the clean rinse state
         if (cleanTimer > 0 && !isRaging) {
             cleanTimer--;
             if (cleanTimer === 0) {
@@ -389,7 +397,6 @@
             }
         }
 
-        // Random chat events updating Thomas's mood state logic automatically
         if (Math.random() < 0.4) {
             let user = "MonitorNode_" + Math.floor(Math.random() * 99);
             let rolledRoast = Math.random() < 0.5;
@@ -397,7 +404,7 @@
             if (rolledRoast) {
                 addChat('restream-chat', user, dietRoasts[Math.floor(Math.random() * dietRoasts.length)], 'restream-text');
                 supply -= 2.0;
-                cleanTimer = 0; // Trolls mess up his clean mindset instantly
+                cleanTimer = 0;
                 if (!isRaging) updateSpriteEmotion('sad');
             } else {
                 addChat('restream-chat', user, couchRoasts[Math.floor(Math.random() * couchRoasts.length)], 'restream-text');
@@ -406,7 +413,6 @@
                 if (!isRaging) updateSpriteEmotion('cry');
             }
         } else {
-            // If no active trolls, return slowly to standard baseline loop expressions
             if (!isRaging && cleanTimer === 0 && Math.random() < 0.15) {
                 updateSpriteEmotion(Math.random() < 0.3 ? 'smug' : 'neutral');
             }
@@ -415,7 +421,7 @@
         if (health <= 0 || supply <= 0) {
             clearInterval(gameInterval);
             document.getElementById('game-window').innerHTML = `
-                <div style="text-align:center; padding: 60px; font-family:monospace; background:#111114; border-radius:12px; border:1px solid #333;">
+                <div style="text-align:center; padding: 60px; font-family:monospace; background:#111114; border-radius:12px; border:1px solid #333; width:100%; box-sizing:border-box;">
                     <h2 style="color:#ff3333; font-size:28px; letter-spacing:1px;">💀 SYSTEM CRASH: STREAM OFFLINE</h2>
                     <p style="color:#aaa; margin: 15px 0;">Your Narco Supply completely depleted. You fell sideways into the salmon couch frame. The restream community has uploaded a 4K frame-clip of the event.</p>
                     <button onclick="window.location.reload()">Instantiate Next Boot Cycle</button>
@@ -423,7 +429,7 @@
         } else if (minutes >= 1080) {
             clearInterval(gameInterval);
             document.getElementById('game-window').innerHTML = `
-                <div style="text-align:center; padding: 60px; font-family:monospace; background:#111114; border-radius:12px; border:1px solid #333;">
+                <div style="text-align:center; padding: 60px; font-family:monospace; background:#111114; border-radius:12px; border:1px solid #333; width:100%; box-sizing:border-box;">
                     <h2 style="color:#ffff33; font-size:28px; letter-spacing:1px;">🏁 18-HOUR BLOCK SECURED</h2>
                     <p style="color:#aaa; margin: 15px 0;">Marathon complete. You occupied a salmon sofa for 18 continuous hours to an audience size of absolute zero. The Potato of Life matrix stands unchallenged.</p>
                     <button onclick="window.location.reload()">Boot Next Cycle</button>
@@ -455,7 +461,7 @@
             supply -= 12;
             hygiene = 100;
             health -= 8;
-            cleanTimer = 6; // Image shifts to clean profile state for 6 game ticks unless broken
+            cleanTimer = 6;
             addChat('main-chat', null, 'Water-only spray cycle over. Outfit parameters unaltered.', 'system');
             addChat('restream-chat', 'Outfit_Police', `WATER RINSE HIGH SEVERITY! Same shirt detected. Streak profile: Day ${shirtDays}!`, 'troll');
             if (!isRaging) updateSpriteEmotion('clean');
