@@ -283,15 +283,17 @@
     let restreamViewers = 14;
     let isRaging = false;
     let rageTimer = 0;
+    let cleanTimer = 0; // Tracks duration of the clean sprite state
     let gameInterval;
     
-    // Direct mapping to your newly uploaded high-quality asset suite
+    // Direct mapping to your expanded high-quality asset suite
     const spritePaths = {
         neutral: 'assets/images/neutral.png',
         sad: 'assets/images/sad.png',
         cry: 'assets/images/cry.png',
         smug: 'assets/images/smug.png',
-        rage: 'assets/images/rage.png'
+        rage: 'assets/images/rage.png',
+        clean: 'assets/images/clean.png' // New clean rinse state mapped successfully
     };
 
     const spriteElement = document.getElementById('character-sprite');
@@ -378,6 +380,15 @@
             }
         }
 
+        // Handle the visual persistence duration for the clean rinse state
+        if (cleanTimer > 0 && !isRaging) {
+            cleanTimer--;
+            if (cleanTimer === 0) {
+                updateSpriteEmotion('neutral');
+                addChat('restream-chat', 'System', 'Rinse texture signature fading. Returning to default coordinates.', 'restream-text');
+            }
+        }
+
         // Random chat events updating Thomas's mood state logic automatically
         if (Math.random() < 0.4) {
             let user = "MonitorNode_" + Math.floor(Math.random() * 99);
@@ -386,15 +397,17 @@
             if (rolledRoast) {
                 addChat('restream-chat', user, dietRoasts[Math.floor(Math.random() * dietRoasts.length)], 'restream-text');
                 supply -= 2.0;
+                cleanTimer = 0; // Trolls mess up his clean mindset instantly
                 if (!isRaging) updateSpriteEmotion('sad');
             } else {
                 addChat('restream-chat', user, couchRoasts[Math.floor(Math.random() * couchRoasts.length)], 'restream-text');
                 supply -= 1.5;
+                cleanTimer = 0;
                 if (!isRaging) updateSpriteEmotion('cry');
             }
         } else {
-            // If no active trolls, return slowly to standard boredom base loop
-            if (!isRaging && Math.random() < 0.15) {
+            // If no active trolls, return slowly to standard baseline loop expressions
+            if (!isRaging && cleanTimer === 0 && Math.random() < 0.15) {
                 updateSpriteEmotion(Math.random() < 0.3 ? 'smug' : 'neutral');
             }
         }
@@ -425,12 +438,14 @@
 
         if (action === 'song' || action === 'story') {
             supply -= 4;
+            cleanTimer = 0;
             addChat('main-chat', null, `Executing looping AI content script architecture.`, 'system');
             addChat('restream-chat', 'Bot_Node', 'More automated loops running. Fills dead space.', 'restream-text');
             if (!isRaging) updateSpriteEmotion('smug');
         } 
         else if (action === 'potato') {
             supply -= 16;
+            cleanTimer = 0;
             health = Math.min(health + 6, 100);
             addChat('main-chat', 'Thomas', "I AM THE POTATO OF LIFE! CHAT LOG PACKETS ARE STEALING MY BROADCAST ENERGY!", 'buddy');
             addChat('restream-chat', 'ClipWatcher', 'HE IS OUT OF HIS SEAT SCREAMING CONSPIRACY LOGS HAHAHAHA!', 'restream-text');
@@ -440,14 +455,16 @@
             supply -= 12;
             hygiene = 100;
             health -= 8;
+            cleanTimer = 6; // Image shifts to clean profile state for 6 game ticks unless broken
             addChat('main-chat', null, 'Water-only spray cycle over. Outfit parameters unaltered.', 'system');
-            addChat('restream-chat', 'Outfit_Police', `SHOWER CLIP! Same shirt detected. Streak profile: Day ${shirtDays}!`, 'troll');
-            if (!isRaging) updateSpriteEmotion('neutral');
+            addChat('restream-chat', 'Outfit_Police', `WATER RINSE HIGH SEVERITY! Same shirt detected. Streak profile: Day ${shirtDays}!`, 'troll');
+            if (!isRaging) updateSpriteEmotion('clean');
         } 
         else if (action === 'check') {
             if (isRaging) return;
             isRaging = true;
             rageTimer = 5;
+            cleanTimer = 0;
             supply = Math.max(supply - 15, 0);
             addChat('main-chat', null, '⚠️ NARCO RAGE ACTIVE: You scanned the restream logging threats regarding your sister and past history!', 'troll');
             addChat('restream-chat', 'Live_Viewer', 'POTATO RAGE MULTIPLIER ENGAGED! WATCH THE EYES FLASH RED!', 'troll');
