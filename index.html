@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Failure Simulator 2027 - Game of the Year Addition</title>
+    <title>Failure Simulator 2027 - Game of the Year Edition</title>
     <style>
         body {
             background-color: #0c0c0e;
@@ -15,152 +15,174 @@
             justify-content: center;
             user-select: none;
         }
+        
         .game-container {
-            width: 1000px;
-            background: #141416;
-            border: 3px double #555;
-            border-radius: 6px;
-            padding: 15px;
-            display: grid;
-            grid-template-rows: auto 1fr auto;
-            gap: 15px;
+            width: 1050px;
+            background: #18181c;
+            border: 2px solid #2d2d35;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
+
         header {
             text-align: center;
-            border-bottom: 2px dashed #444;
-            padding-bottom: 5px;
+            background: #111114;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #2d2d35;
         }
-        header h1 { color: #ff3333; margin: 0; font-size: 28px; }
-        header p { color: #ffff33; margin: 3px 0; font-weight: bold; font-size: 12px; text-transform: uppercase; }
+        header h1 { color: #ff3333; margin: 0; font-size: 24px; letter-spacing: 2px; }
+        header p { color: #ffff33; margin: 5px 0 0 0; font-weight: bold; font-size: 11px; letter-spacing: 1px; }
         
         .main-stage {
             display: grid;
-            grid-template-columns: 550px 1fr;
-            gap: 15px;
+            grid-template-columns: 600px 1fr;
+            gap: 20px;
         }
 
-        .video-feed {
-            width: 550px;
-            height: 340px;
-            background: #1c1c1f;
-            border: 2px solid #333;
+        /* Upgraded Stream Window UI to match image */
+        .video-feed-wrapper {
             position: relative;
+            background: #e2e2e8; /* White/grey wall backdrop */
+            border: 4px solid #111114;
+            border-radius: 8px;
+            width: 600px;
+            height: 360px;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.15);
         }
+
+        /* Overlay Stream Elements */
         .live-tag {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            background: red;
+            top: 15px;
+            left: 15px;
+            background: #ff0000;
             color: white;
-            padding: 3px 8px;
+            padding: 4px 10px;
             font-weight: bold;
             font-size: 12px;
-            border-radius: 3px;
+            border-radius: 4px;
+            z-index: 10;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
             animation: pulse 1s infinite alternate;
         }
-        @keyframes pulse { from { opacity: 0.6; } to { opacity: 1; } }
+        @keyframes pulse { from { opacity: 0.7; } to { opacity: 1; } }
         
         .watermark {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            color: rgba(255,255,255,0.2);
-            font-size: 16px;
+            top: 15px;
+            right: 15px;
+            color: #b3a2c7;
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            font-size: 20px;
             font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            z-index: 10;
         }
 
+        .bottom-ticker {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(17, 17, 20, 0.85);
+            padding: 8px 15px;
+            font-size: 11px;
+            box-sizing: border-box;
+            border-top: 1px solid #2d2d35;
+            color: #fff;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Canvas drawing layer */
         #gameCanvas {
-            background: #2a2a30;
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            z-index: 1;
         }
 
+        /* Dashboard Interface */
         .side-dashboard {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 15px;
         }
         .panel {
-            background: #1c1c1f;
-            border: 1px solid #333;
-            padding: 12px;
-            border-radius: 4px;
+            background: #111114;
+            border: 1px solid #2d2d35;
+            padding: 15px;
+            border-radius: 8px;
         }
-        .stat-bar-container {
-            margin-bottom: 8px;
-        }
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            margin-bottom: 3px;
-        }
-        .bar-bg {
-            background: #09090b;
-            height: 12px;
-            border: 1px solid #444;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        .bar-fill { height: 100%; width: 100%; transition: width 0.4s; }
+        .panel h3 { margin: 0 0 12px 0; font-size: 13px; color: #888; text-transform: uppercase; }
+
+        .stat-bar-container { margin-bottom: 10px; }
+        .stat-header { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; font-weight: bold; }
+        .bar-bg { background: #1a1a22; height: 14px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
+        .bar-fill { height: 100%; width: 100%; transition: width 0.6s ease; }
         
-        .action-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-        }
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         button {
-            background: #2b2b30;
+            background: #22222a;
             color: #fff;
-            border: 1px solid #555;
-            padding: 10px;
+            border: 1px solid #3d3d4a;
+            padding: 12px;
             font-family: inherit;
             font-size: 11px;
+            font-weight: bold;
             cursor: pointer;
-            border-radius: 3px;
+            border-radius: 6px;
             transition: all 0.2s;
         }
-        button:hover { background: #3a3a42; border-color: #ffff33; }
-        button:active { background: #1a1a1e; }
-        .btn-panic { background: #5c2b2b; border-color: #993333; }
-        .btn-panic:hover { background: #7a3838; }
+        button:hover { background: #2d2d38; border-color: #ffff33; color: #ffff33; }
+        .btn-panic { background: #4a2424; border-color: #733535; }
+        .btn-panic:hover { background: #5c2d2d; border-color: #ff3333; color: #fff; }
 
+        /* Dual Chat Terminals */
         .chat-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            height: 200px;
+            gap: 20px;
+            height: 220px;
         }
         .chat-container {
             display: flex;
             flex-direction: column;
-            background: #111113;
-            border: 1px solid #222;
+            background: #09090b;
+            border: 1px solid #2d2d35;
+            border-radius: 8px;
+            overflow: hidden;
         }
         .chat-header {
-            background: #1c1c1f;
-            padding: 5px;
+            background: #111114;
+            padding: 8px 12px;
             font-size: 11px;
             font-weight: bold;
-            border-bottom: 1px solid #333;
-            color: #aaa;
+            border-bottom: 1px solid #2d2d35;
+            color: #888;
         }
         .chat-window {
             flex-grow: 1;
-            padding: 8px;
+            padding: 12px;
             overflow-y: auto;
             font-size: 11px;
-            line-height: 1.4;
+            line-height: 1.5;
         }
-        .msg { margin-bottom: 5px; }
+        .msg { margin-bottom: 6px; }
         .system { color: #ffff33; font-style: italic; }
         .buddy { color: #33ff33; font-weight: bold; }
         .troll { color: #ff5555; }
-        .restream-text { color: #9d9da6; }
+        .restream-text { color: #a1a1aa; }
     </style>
 </head>
 <body>
@@ -168,59 +190,68 @@
 <div class="game-container" id="game-window">
     <header>
         <h1>FAILURE SIMULATOR 2027</h1>
-        <p>🏆 GAME OF THE YEAR ADDITION - PACED STABLE BUILD 🏆</p>
+        <p>🏆 Game of the Year Addition - Enhanced Art Engine 🏆</p>
     </header>
 
     <div class="main-stage">
-        <div class="video-feed">
+        <div class="video-feed-wrapper">
             <div class="live-tag">🔴 LIVE</div>
-            <div class="watermark">PotatoTV</div>
-            <canvas id="gameCanvas" width="550" height="340"></canvas>
+            <div class="watermark">Potato TV</div>
+            <canvas id="gameCanvas" width="600" height="360"></canvas>
+            <div class="bottom-ticker">
+                <span>Heaven: Tim Dooley The Potato of Life, Axis of North</span>
+                <span style="color: #ffcc00;">☕ support me at buymeacoffee.com/potatolife</span>
+            </div>
         </div>
 
         <div class="side-dashboard">
             <div class="panel">
+                <h3>Vitals Diagnostic</h3>
                 <div class="stat-bar-container">
                     <div class="stat-header"><span>NARCO SUPPLY (STAMINA)</span><span id="txt-supply">100%</span></div>
-                    <div class="bar-bg"><div id="fill-supply" class="bar-fill" style="background: #00ff66;"></div></div>
+                    <div class="bar-bg"><div id="fill-supply" class="bar-fill" style="background: #00b37e;"></div></div>
                 </div>
                 <div class="stat-bar-container">
-                    <div class="stat-header"><span>HEALTH METER</span><span id="txt-health">100%</span></div>
-                    <div class="bar-bg"><div id="fill-health" class="bar-fill" style="background: #ff3333;"></div></div>
+                    <div class="stat-header"><span>HEALTH MATRIX</span><span id="txt-health">100%</span></div>
+                    <div class="bar-bg"><div id="fill-health" class="bar-fill" style="background: #e53e3e;"></div></div>
                 </div>
                 <div class="stat-bar-container">
-                    <div class="stat-header"><span>HYGIENE VALUE</span><span id="txt-hygiene">80%</span></div>
-                    <div class="bar-bg"><div id="fill-hygiene" class="bar-fill" style="background: #3399ff;"></div></div>
+                    <div class="stat-header"><span>HYGIENE SYSTEM</span><span id="txt-hygiene">80%</span></div>
+                    <div class="bar-bg"><div id="fill-hygiene" class="bar-fill" style="background: #3182ce;"></div></div>
                 </div>
             </div>
 
-            <div class="panel" style="font-size:11px; line-height: 1.5;">
-                <strong>Marathon Clock:</strong> <span id="clock-txt">00:00</span> / 18:00 Hours<br>
-                <strong>Main Viewers:</strong> <span id="viewers-txt">0</span> | <strong>Restream Core:</strong> <span id="restream-viewers-txt">14</span><br>
-                <strong>Outfit Registry:</strong> <span id="shirt-txt" style="color:#ff66cc;">Pink Shirt</span> (Day <span id="shirt-days">19</span>)
+            <div class="panel" style="font-size:11px; line-height: 1.6; display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                <div><strong>Clock Cycle:</strong> <span id="clock-txt">00:00</span>/18:00</div>
+                <div><strong>Live Audience:</strong> <span id="viewers-txt">0</span></div>
+                <div><strong>Outfit Streaks:</strong> <span id="shirt-days">19</span> Days</div>
+                <div><strong>Restream Base:</strong> <span id="restream-viewers-txt">14</span></div>
+                <div style="grid-column: span 2; border-top: 1px dashed #333; padding-top: 5px; margin-top: 5px;">
+                    <strong>Active Top Armor:</strong> <span id="shirt-txt" style="color:#ff66cc; font-weight:bold;">Pink Shirt</span>
+                </div>
             </div>
 
             <div class="panel action-grid">
-                <button onclick="triggerAction('song')">💿 Run AI Song Loop</button>
-                <button onclick="triggerAction('story')">📚 Run AI Story Matrix</button>
-                <button id="potato-btn" onclick="triggerAction('potato')">🥔 "Potato of Life" Rant</button>
-                <button onclick="triggerAction('shower')">🚿 Water-Only Rinse</button>
-                <button class="btn-panic" onclick="triggerAction('check')" style="grid-column: span 2;">👀 Analyze Restream Feed</button>
+                <button onclick="triggerAction('song')">💿 Deploy AI Song</button>
+                <button onclick="triggerAction('story')">📚 Deploy AI Story</button>
+                <button id="potato-btn" onclick="triggerAction('potato')">🥔 Potato Manifesto</button>
+                <button onclick="triggerAction('shower')">局 Water Rinse</button>
+                <button class="btn-panic" onclick="triggerAction('check')" style="grid-column: span 2;">👀 Scan Restream Dashboard</button>
             </div>
         </div>
     </div>
 
     <div class="chat-section">
         <div class="chat-container">
-            <div class="chat-header">MAIN CHAT (ROOM SIZE: 0-1)</div>
+            <div class="chat-header">BROADCAST CORE CHAT (0-1 VIEWERS)</div>
             <div class="chat-window" id="main-chat">
-                <div class="msg system">Establishing direct channel node... Complete. Room empty.</div>
+                <div class="msg system">Broadcast pipeline active. Audience metric: 0.</div>
             </div>
         </div>
-        <div class="chat-container" style="border-color: #4a5cb5;">
-            <div class="chat-header" style="background: #252e5c; color: #fff;">RESTREAM CHAT ARCHIVE (MONITORING ACTIVE)</div>
+        <div class="chat-container" style="border-color: #3b4a94;">
+            <div class="chat-header" style="background: #19224d; color: #fff;">RESTREAM LOG ARCHIVE (MONITORING HUB)</div>
             <div class="chat-window" id="restream-chat">
-                <div class="msg restream-text"><em>System: Mirror link streaming. Pixel parsing outfit metrics.</em></div>
+                <div class="msg restream-text"><em>System: Ingesting mirrored frames. Tracking clothing coordinates.</em></div>
             </div>
         </div>
     </div>
@@ -232,7 +263,7 @@
     let hygiene = 80;
     let shirtDays = 19;
     let shirts = ["Black", "Red", "Pink"];
-    let shirtColors = ["#222222", "#aa2222", "#d6508c"];
+    let shirtColors = ["#191919", "#bd2a2a", "#e0609b"];
     let currentShirtIndex = 2; 
     let minutes = 0;
     let viewers = 0;
@@ -245,107 +276,129 @@
     const ctx = canvas.getContext("2d");
 
     const dietRoasts = [
-        "Shoving greasy french fries down his mouth like a literal prehistoric neanderthal",
-        "The absolute zero manner fry consumption logic is on camera again",
+        "Shoving greasy fries down his throat like a prehistoric neanderthal",
+        "The absolute zero manners fry consumption logic is back",
         "Look at the grease marks tracking all over his chin profile 💀"
     ];
     const couchRoasts = [
         "The structural mold colony on that salmon couch frame is self-aware",
-        "Look at that bedazzled white belt completely losing the retention fight",
-        "Unironically wearing tight girl blue jeans on a 18hr couch lock stream"
+        "Look at that bedazzled white belt completely losing the fight",
+        "Unironically wearing tight girl blue jeans on an 18hr couch lock stream"
     ];
 
     function drawScreen() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        ctx.fillStyle = "#e2e2e8";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // 1. Salmon Couch Unit Base (Curved/smooth look like image)
+        ctx.fillStyle = "#e97467"; // Balanced Salmon tone
+        ctx.beginPath();
+        ctx.roundRect(30, 160, 540, 160, 16);
+        ctx.fill();
 
-        ctx.fillStyle = "#fa8072"; 
-        ctx.fillRect(40, 160, 470, 150);
-        ctx.fillStyle = "#e06c5f"; 
-        ctx.fillRect(40, 160, 470, 30); 
-        ctx.fillRect(40, 250, 470, 60); 
+        // Couch Backing Shadow Depth Split
+        ctx.fillStyle = "#d45f53"; 
+        ctx.beginPath();
+        ctx.roundRect(30, 160, 540, 50, [16, 16, 0, 0]);
+        ctx.fill();
 
-        ctx.fillStyle = "#3366cc";
-        ctx.fillRect(50, 180, 80, 110);
-        ctx.fillStyle = "#224499"; 
-        ctx.fillRect(70, 180, 10, 110);
-        ctx.fillRect(100, 180, 10, 110);
+        // Couch Cushion Line Shadows
+        ctx.fillStyle = "#bc5044";
+        ctx.fillRect(30, 245, 540, 12);
 
-        let centerX = canvas.width / 2;
-        let centerY = 190;
+        // 2. Blue Blanket over the right side of the couch armrest (Matches Image layout)
+        ctx.fillStyle = "#3a64ad";
+        ctx.beginPath();
+        ctx.roundRect(440, 180, 100, 110, [8, 8, 4, 4]);
+        ctx.fill();
+        ctx.fillStyle = "#274885"; // Blanket Texture Shades
+        ctx.fillRect(465, 180, 12, 110);
+        ctx.fillRect(500, 180, 12, 110);
 
-        if (isRaging && Math.floor(Date.now() / 200) % 2 === 0) {
-            ctx.fillStyle = "rgba(255, 0, 0, 0.25)";
+        // 3. Main Character Rendering
+        let centerX = canvas.width / 2 - 20; // Slightly left-aligned like layout photo
+        let centerY = 195;
+
+        // Narco Rage Flash Matrix
+        if (isRaging && Math.floor(Date.now() / 250) % 2 === 0) {
+            ctx.fillStyle = "rgba(235, 64, 64, 0.2)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
-        ctx.fillStyle = "#e8c3a7"; 
+        // Skin Base (Thinner profile)
+        ctx.fillStyle = "#ebd0be";
 
+        // Head Profile Base
         ctx.beginPath();
-        ctx.arc(centerX, centerY - 50, 24, 0, Math.PI * 2);
+        ctx.arc(centerX, centerY - 50, 22, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.strokeStyle = "#8c6f4b"; 
+        // Hair Strand Layout (Balding top, flowing downwards raggedly)
+        ctx.strokeStyle = "#7a6245"; 
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(centerX - 15, centerY - 68); ctx.lineTo(centerX - 35, centerY - 75);
-        ctx.moveTo(centerX - 10, centerY - 72); ctx.lineTo(centerX - 28, centerY - 88);
-        ctx.moveTo(centerX + 15, centerY - 68); ctx.lineTo(centerX + 35, centerY - 75);
-        ctx.moveTo(centerX + 10, centerY - 72); ctx.lineTo(centerX + 28, centerY - 88);
+        ctx.moveTo(centerX - 12, centerY - 66); ctx.lineTo(centerX - 30, centerY - 72);
+        ctx.moveTo(centerX - 8, centerY - 70); ctx.lineTo(centerX - 22, centerY - 85);
+        ctx.moveTo(centerX + 12, centerY - 66); ctx.lineTo(centerX + 30, centerY - 72);
+        ctx.moveTo(centerX + 8, centerY - 70); ctx.lineTo(centerX + 22, centerY - 85);
         ctx.stroke();
 
-        ctx.fillStyle = "#bfa36f"; 
-        ctx.fillRect(centerX - 27, centerY - 50, 9, 75);
-        ctx.fillRect(centerX + 18, centerY - 50, 9, 75);
+        // Extended Hair Flow (Past shoulders)
+        ctx.fillStyle = "#ad9263"; 
+        ctx.fillRect(centerX - 25, centerY - 48, 8, 85);
+        ctx.fillRect(centerX + 17, centerY - 48, 8, 85);
 
-        ctx.fillStyle = "#ffcccc";
-        ctx.fillRect(centerX - 12, centerY - 56, 7, 5);
-        ctx.fillRect(centerX + 5, centerY - 56, 7, 5);
-        ctx.fillStyle = isRaging ? "#ff0000" : "#444455"; 
-        ctx.fillRect(centerX - 10, centerY - 55, 3, 3);
-        ctx.fillRect(centerX + 7, centerY - 55, 3, 3);
+        // Exhausted Red/Veined Eyes
+        ctx.fillStyle = "#ffe0e0";
+        ctx.fillRect(centerX - 11, centerY - 55, 6, 5);
+        ctx.fillRect(centerX + 5, centerY - 55, 6, 5);
+        ctx.fillStyle = isRaging ? "#d62424" : "#4b4b54"; 
+        ctx.fillRect(centerX - 9, centerY - 54, 3, 3);
+        ctx.fillRect(centerX + 7, centerY - 54, 3, 3);
 
-        ctx.fillStyle = "#332211"; 
-        ctx.fillRect(centerX - 8, centerY - 40, 16, 7);
-        ctx.fillStyle = "#ccaa44";
-        ctx.fillRect(centerX - 6, centerY - 40, 3, 3);
-        ctx.fillRect(centerX - 1, centerY - 40, 2, 2);
-        ctx.fillRect(centerX + 3, centerY - 40, 3, 3);
-        ctx.fillRect(centerX - 4, centerY - 36, 2, 3);
-        ctx.fillRect(centerX + 2, centerY - 36, 3, 3);
+        // Rotting Teeth Grid
+        ctx.fillStyle = "#261c14"; 
+        ctx.fillRect(centerX - 7, centerY - 39, 14, 6);
+        ctx.fillStyle = "#cca43a"; // Cavity/decay pixels
+        ctx.fillRect(centerX - 5, centerY - 39, 2, 2);
+        ctx.fillRect(centerX + 3, centerY - 39, 2, 2);
+        ctx.fillRect(centerX - 2, centerY - 36, 2, 3);
 
-        ctx.fillStyle = "#bfa36f";
+        // Full Dirty Blonde Unkempt Beard
+        ctx.fillStyle = "#ad9263";
         ctx.beginPath();
-        ctx.moveTo(centerX - 24, centerY - 45);
-        ctx.lineTo(centerX + 24, centerY - 45);
-        ctx.lineTo(centerX + 15, centerY - 5);
-        ctx.lineTo(centerX - 15, centerY - 5);
+        ctx.moveTo(centerX - 22, centerY - 44);
+        ctx.lineTo(centerX + 22, centerY - 44);
+        ctx.lineTo(centerX + 16, centerY + 10);
+        ctx.lineTo(centerX - 16, centerY + 10);
         ctx.closePath();
         ctx.fill();
 
+        // Torso Base - Alternating Shirt logic active
         ctx.fillStyle = shirtColors[currentShirtIndex];
-        ctx.fillRect(centerX - 40, centerY - 20, 80, 85);
-        ctx.fillRect(centerX - 55, centerY - 20, 20, 30);
-        ctx.fillRect(centerX + 35, centerY - 20, 20, 30);
+        ctx.fillRect(centerX - 38, centerY - 15, 76, 80);
+        ctx.fillRect(centerX - 52, centerY - 15, 18, 28);
+        ctx.fillRect(centerX + 34, centerY - 15, 18, 28);
 
-        ctx.fillStyle = "#e8c3a7";
-        ctx.fillRect(centerX - 52, centerY + 10, 10, 60);
-        ctx.fillRect(centerX + 42, centerY + 10, 10, 60);
+        // Pathetic Emaciated Arms
+        ctx.fillStyle = "#ebd0be";
+        ctx.fillRect(centerX - 48, centerY + 13, 9, 55);
+        ctx.fillRect(centerX + 39, centerY + 13, 9, 55);
 
-        ctx.fillStyle = "#4a75a0";
-        ctx.fillRect(centerX - 42, centerY + 65, 84, 60);
+        // Tight Girl Blue Jeans layer
+        ctx.fillStyle = "#456b94";
+        ctx.fillRect(centerX - 39, centerY + 65, 78, 65);
 
+        // Bedazzled White Belt Frame
         ctx.fillStyle = "#ffffff";
-        ctx.fillRect(centerX - 42, centerY + 62, 84, 8);
-        ctx.fillStyle = "#66ccff";
-        for (let i = centerX - 36; i < centerX + 40; i += 12) {
-            ctx.fillRect(i, centerY + 64, 3, 3);
+        ctx.fillRect(centerX - 39, centerY + 62, 78, 9);
+        ctx.fillStyle = "#5ce6ff"; // Gem dots
+        for (let i = centerX - 33; i < centerX + 36; i += 10) {
+            ctx.fillRect(i, centerY + 65, 3, 3);
         }
 
-        ctx.fillStyle = "#eec550"; 
-        ctx.fillRect(centerX - 10, centerY + 45, 18, 4);
+        // The Deep Fried Fry Item Core
+        ctx.fillStyle = "#deb136"; 
+        ctx.fillRect(centerX - 8, centerY + 42, 16, 4);
     }
 
     function updateUI() {
@@ -367,7 +420,7 @@
         let mins = (minutes % 60).toString().padStart(2, '0');
         document.getElementById('clock-txt').innerText = `${hrs}:${mins}`;
 
-        document.getElementById('rage-banner').style.display = isRaging ? 'block' : 'none';
+        document.getElementById('potato-btn').disabled = isRaging;
     }
 
     function addChat(panelId, user, text, type) {
@@ -381,20 +434,20 @@
     }
 
     function gameTick() {
-        minutes += 6; // 6 game minutes advance each slow cycle
+        minutes += 6; 
         
         if (minutes % 180 === 0) {
             if (shirtDays < 28) shirtDays++;
-            if (Math.random() < 0.25) {
+            if (Math.random() < 0.3) {
                 currentShirtIndex = Math.floor(Math.random() * shirts.length);
-                addChat('restream-chat', 'ShirtMonitor', `Webcam color index shifted to ${shirts[currentShirtIndex]}. Streak baseline continuous.`, 'restream-text');
+                addChat('restream-chat', 'ShirtScanner', `Webcam color change tracking: active shirt signature is now ${shirts[currentShirtIndex]}.`, 'restream-text');
             }
         }
 
         restreamViewers = Math.floor(Math.random() * (24 - 11 + 1)) + 11;
         viewers = Math.random() < 0.08 ? 1 : 0;
 
-        let supplyDrain = isRaging ? 2.5 : 0.7;
+        let supplyDrain = isRaging ? 2.6 : 0.7;
         supply -= supplyDrain;
         hygiene -= 0.4;
 
@@ -405,12 +458,12 @@
             rageTimer--;
             if (rageTimer <= 0) {
                 isRaging = false;
-                addChat('main-chat', null, 'Narco Rage expired. Exhaustion parameters applied.', 'system');
+                addChat('main-chat', null, 'Narco Rage cool down completed.', 'system');
             }
         }
 
         if (Math.random() < 0.4) {
-            let user = "Hater_" + Math.floor(Math.random() * 99);
+            let user = "MonitorNode_" + Math.floor(Math.random() * 99);
             if (Math.random() < 0.5) {
                 addChat('restream-chat', user, dietRoasts[Math.floor(Math.random() * dietRoasts.length)], 'restream-text');
                 supply -= 2.0;
@@ -423,18 +476,18 @@
         if (health <= 0 || supply <= 0) {
             clearInterval(gameInterval);
             document.getElementById('game-window').innerHTML = `
-                <div style="text-align:center; padding: 60px; font-family:monospace;">
-                    <h2 style="color:#ff3333; font-size:32px;">💀 STREAM TERMINATED</h2>
-                    <p>Your Narco Supply hit zero. You collapsed backward into the moldy salmon sofa frame. The restream processed the clip frame instantly.</p>
-                    <button onclick="window.location.reload()" style="margin-top:15px; display:inline-block; text-align:center;">Instantiate Another Marathon Sequence</button>
+                <div style="text-align:center; padding: 60px; font-family:monospace; background:#111114; border-radius:12px; border:1px solid #333;">
+                    <h2 style="color:#ff3333; font-size:28px; letter-spacing:1px;">💀 SYSTEM CRASH: STREAM OFFLINE</h2>
+                    <p style="color:#aaa; margin: 15px 0;">Your Narco Supply completely depleted. You fell sideways into the salmon couch frame. The restream community has uploaded a 4K frame-clip of the event.</p>
+                    <button onclick="window.location.reload()">Instantiate Next Boot Cycle</button>
                 </div>`;
         } else if (minutes >= 1080) {
             clearInterval(gameInterval);
             document.getElementById('game-window').innerHTML = `
-                <div style="text-align:center; padding: 60px; font-family:monospace;">
-                    <h2 style="color:#ffff33; font-size:32px;">🏁 MARATHON COMPLETE</h2>
-                    <p>Miraculously, you successfully sat on a salmon couch for 18 hours streaming to exactly zero viewers. The Potato of Life configuration holds true.</p>
-                    <button onclick="window.location.reload()">Process Next Day Shift</button>
+                <div style="text-align:center; padding: 60px; font-family:monospace; background:#111114; border-radius:12px; border:1px solid #333;">
+                    <h2 style="color:#ffff33; font-size:28px; letter-spacing:1px;">🏁 18-HOUR BLOCK SECURED</h2>
+                    <p style="color:#aaa; margin: 15px 0;">Marathon complete. You occupied a salmon sofa for 18 continuous hours to an audience size of absolute zero. The Potato of Life matrix stands unchallenged.</p>
+                    <button onclick="window.location.reload()">Boot Next Cycle</button>
                 </div>`;
         }
 
@@ -443,33 +496,33 @@
     }
 
     function triggerAction(action) {
-        if (supply <= 10) return;
+        if (supply <= 12) return;
 
         if (action === 'song' || action === 'story') {
             supply -= 4;
-            addChat('main-chat', null, `Executing automated AI Content generator module.`, 'system');
-            addChat('restream-chat', 'Bot_Parser', 'Looping fake generic media asset to hide lack of performance.', 'restream-text');
+            addChat('main-chat', null, `Executing looping AI content script architecture.`, 'system');
+            addChat('restream-chat', 'Bot_Node', 'More automated loops running. Fills dead space.', 'restream-text');
         } 
         else if (action === 'potato') {
-            supply -= 15;
-            health = Math.min(health + 8, 100);
-            addChat('main-chat', 'Thomas', "I AM THE POTATO OF LIFE! YOUR NETWORK IS STEALING BROADCAST FRAME DATA!", 'buddy');
-            addChat('restream-chat', 'Clipper99', 'HE IS OUT OF HIS CHAIR SCREAMING POTATO CONSPIRACIES HAHAHA!', 'restream-text');
+            supply -= 16;
+            health = Math.min(health + 6, 100);
+            addChat('main-chat', 'Thomas', "I AM THE POTATO OF LIFE! CHAT LOG PACKETS ARE STEALING MY BROADCAST ENERGY!", 'buddy');
+            addChat('restream-chat', 'ClipWatcher', 'HE IS OUT OF HIS SEAT SCREAMING CONSPIRACY LOGS HAHAHAHA!', 'restream-text');
         } 
         else if (action === 'shower') {
-            supply -= 14;
+            supply -= 12;
             hygiene = 100;
-            health -= 10;
-            addChat('main-chat', null, 'Water-only rinse sequence terminated. Clothing matrix untouched.', 'system');
-            addChat('restream-chat', 'Outfit_Police', `SHOWER DETECTED! Same shirt confirmed. Currently Day ${shirtDays}!`, 'troll');
+            health -= 8;
+            addChat('main-chat', null, 'Water-only spray cycle over. Outfit parameters unaltered.', 'system');
+            addChat('restream-chat', 'Outfit_Police', `SHOWER CLIP! Same shirt detected. Streak profile: Day ${shirtDays}!`, 'troll');
         } 
         else if (action === 'check') {
             if (isRaging) return;
             isRaging = true;
             rageTimer = 5;
             supply = Math.max(supply - 15, 0);
-            addChat('main-chat', null, '⚠️ NARCO RAGE INITIATED: Parsed restream logs referencing your records and furniture!', 'troll');
-            addChat('restream-chat', 'Live_Viewer', 'RAGE LOOP ACTIVATED! HE GULPED THE FRY METRIC!', 'troll');
+            addChat('main-chat', null, '⚠️ NARCO RAGE ACTIVE: You scanned the restream logging threats regarding your sister and past history!', 'troll');
+            addChat('restream-chat', 'Active_Roaster', 'POTATO RAGE MULTIPLIER ENGAGED! WATCH THE EYES FLASH RED!', 'troll');
         }
         
         drawScreen();
@@ -479,8 +532,7 @@
     window.onload = function() {
         drawScreen();
         updateUI();
-        // Slowed down calculation loop to every 3500ms (3.5 seconds)
-        gameInterval = setInterval(gameTick, 3500);
+        gameInterval = setInterval(gameTick, 3500); // 3.5-second readable tick pacing
     };
 </script>
 
